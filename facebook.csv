@@ -1,0 +1,37 @@
+import pandas as pd
+
+# Read dataset using semicolon separator
+df = pd.read_csv("dataset_facebook.csv", sep=';')
+
+# Display column names
+print(df.columns)
+
+print("Original Data:\n", df.head())
+
+# Create subset
+subset = df[['Page total likes', 'Type']]
+print("\nSubset:\n", subset.head())
+
+# Merge Data
+df2 = df[['Page total likes', 'Category']]
+merged = pd.merge(subset, df2, on='Page total likes')
+
+print("\nMerged Data:\n", merged.head())
+
+# Sort Data
+sorted_data = df.sort_values(by='Page total likes')
+
+print("\nSorted Data:\n", sorted_data.head())
+
+# Transpose Data
+transpose = subset.T
+
+print("\nTransposed Data:\n", transpose)
+
+# Shape of data
+print("\nShape of dataset:", df.shape)
+
+# Reshape data
+reshaped = df[['Page total likes', 'Category']].values.reshape(-1, 2)
+
+print("\nReshaped Data:\n", reshaped)
