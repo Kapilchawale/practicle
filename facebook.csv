@@ -1,37 +1,81 @@
-import pandas as pd
+*RIGHT JOIN and CROSS JOIN in Library Management System 
 
-# Read dataset using semicolon separator
-df = pd.read_csv("dataset_facebook.csv", sep=';')
+--Create Database
+CREATE DATABASE LibraryDB;
 
-# Display column names
-print(df.columns)
+-- Use Database
+USE LibraryDB;
 
-print("Original Data:\n", df.head())
+-- Create Member Table
+CREATE TABLE Member (
+    Member_ID INT PRIMARY KEY,
+    Member_Name VARCHAR(50),
+    City VARCHAR(30)
+);
 
-# Create subset
-subset = df[['Page total likes', 'Type']]
-print("\nSubset:\n", subset.head())
+-- Create Book Table
+CREATE TABLE Book (
+    Book_ID INT PRIMARY KEY,
+    Book_Name VARCHAR(50),
+    Author VARCHAR(50)
+);
 
-# Merge Data
-df2 = df[['Page total likes', 'Category']]
-merged = pd.merge(subset, df2, on='Page total likes')
+-- Create Issue_Record Table
+CREATE TABLE Issue_Record (
+    Issue_ID INT PRIMARY KEY,
+    Member_ID INT,
+    Book_ID INT,
+    Issue_Date DATE,
+    FOREIGN KEY (Member_ID) REFERENCES Member(Member_ID),
+    FOREIGN KEY (Book_ID) REFERENCES Book(Book_ID)
+);
 
-print("\nMerged Data:\n", merged.head())
+-- Insert Records into Member Table
+INSERT INTO Member VALUES
+(1, 'Amit', 'Pune'),
+(2, 'Sneha', 'Mumbai'),
+(3, 'Rahul', 'Nashik');
 
-# Sort Data
-sorted_data = df.sort_values(by='Page total likes')
+-- Insert Records into Book Table
+INSERT INTO Book VALUES
+(101, 'Java Programming', 'James Gosling'),
+(102, 'Database System', 'Korth'),
+(103, 'Python Basics', 'Guido Van Rossum'),
+(104, 'Computer Networks', 'Tanenbaum');
 
-print("\nSorted Data:\n", sorted_data.head())
+-- Insert Records into Issue_Record Table
+INSERT INTO Issue_Record VALUES
+(1, 1, 101, '2026-05-01'),
+(2, 2, 102, '2026-05-03');
 
-# Transpose Data
-transpose = subset.T
+-- Display Tables
+SELECT * FROM Member;
+SELECT * FROM Book;
+SELECT * FROM Issue_Record;
 
-print("\nTransposed Data:\n", transpose)
+---------------------------------------------------
+-- RIGHT JOIN
+-- Display all books including not issued books
+---------------------------------------------------
 
-# Shape of data
-print("\nShape of dataset:", df.shape)
+SELECT 
+    Issue_Record.Issue_ID,
+    Member.Member_Name,
+    Book.Book_Name,
+    Book.Author
+FROM Issue_Record
+RIGHT JOIN Book
+ON Issue_Record.Book_ID = Book.Book_ID
+LEFT JOIN Member
+ON Issue_Record.Member_ID = Member.Member_ID;
 
-# Reshape data
-reshaped = df[['Page total likes', 'Category']].values.reshape(-1, 2)
+---------------------------------------------------
+-- CROSS JOIN
+-- Display all possible combinations of members and books
+---------------------------------------------------
 
-print("\nReshaped Data:\n", reshaped)
+SELECT 
+    Member.Member_Name,
+    Book.Book_Name
+FROM Member
+CROSS JOIN Book;
