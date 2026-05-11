@@ -1,83 +1,66 @@
-*executea function using cursor
-
--- Create Database
-CREATE DATABASE CompanyDB;
-
--- Use Database
-USE CompanyDB;
-
--- Create Employee Table
+create and executea function using cursor
+--- Create Employee Table
 CREATE TABLE Employee (
-    Emp_ID INT PRIMARY KEY,
-    Emp_Name VARCHAR(50),
-    Department VARCHAR(30),
-    Salary INT
+    Emp_ID NUMBER PRIMARY KEY,
+    Emp_Name VARCHAR2(50),
+    Department VARCHAR2(30),
+    Salary NUMBER
 );
 
 -- Insert Records
-INSERT INTO Employee VALUES
-(1, 'Amit', 'HR', 25000),
-(2, 'Sneha', 'IT', 40000),
-(3, 'Rahul', 'Finance', 35000),
-(4, 'Priya', 'IT', 45000);
+INSERT INTO Employee VALUES (1, 'Amit', 'HR', 25000);
+INSERT INTO Employee VALUES (2, 'Sneha', 'IT', 40000);
+INSERT INTO Employee VALUES (3, 'Rahul', 'Finance', 35000);
+INSERT INTO Employee VALUES (4, 'Priya', 'IT', 45000);
 
 -- Display Table
 SELECT * FROM Employee;
 
-----------------------------------------------------
+---------------------------------------------------
 -- Create Function Using Cursor
--- Function Returns Total Salary
-----------------------------------------------------
+---------------------------------------------------
 
-DELIMITER $$
+CREATE OR REPLACE FUNCTION Total_Salary
+RETURN NUMBER
+IS
 
-CREATE FUNCTION Total_Salary()
-RETURNS INT
-DETERMINISTIC
+    -- Variable Declaration
+    total NUMBER := 0;
+    sal NUMBER;
 
-BEGIN
-
-    DECLARE done INT DEFAULT 0;
-    DECLARE sal INT;
-    DECLARE total INT DEFAULT 0;
-
-    -- Declare Cursor
-    DECLARE emp_cursor CURSOR FOR
+    -- Cursor Declaration
+    CURSOR emp_cursor IS
     SELECT Salary FROM Employee;
 
-    -- Handle End of Cursor
-    DECLARE CONTINUE HANDLER FOR NOT FOUND
-    SET done = 1;
+BEGIN
 
     -- Open Cursor
     OPEN emp_cursor;
 
-    read_loop: LOOP
+    LOOP
 
         -- Fetch Salary
         FETCH emp_cursor INTO sal;
 
         -- Exit Condition
-        IF done = 1 THEN
-            LEAVE read_loop;
-        END IF;
+        EXIT WHEN emp_cursor%NOTFOUND;
 
         -- Add Salary
-        SET total = total + sal;
+        total := total + sal;
 
     END LOOP;
 
     -- Close Cursor
     CLOSE emp_cursor;
 
+    -- Return Total Salary
     RETURN total;
 
-END$$
+END;
+/
 
-DELIMITER ;
-
-----------------------------------------------------
+---------------------------------------------------
 -- Execute Function
-----------------------------------------------------
+---------------------------------------------------
 
-SELECT Total_Salary() AS Total_Employee_Salary;
+SELECT Total_Salary FROM DUAL;
