@@ -1,0 +1,73 @@
+*data manipulation insert update delete
+
+--- Create Database
+CREATE DATABASE CollegeDB;
+
+-- Use Database
+USE CollegeDB;
+
+-- Create Table
+CREATE TABLE Student (
+    RollNo INT PRIMARY KEY,
+    Name VARCHAR(50),
+    Age INT,
+    Course VARCHAR(30),
+    Marks INT
+);
+
+-- Insert Records
+INSERT INTO Student VALUES
+(1, 'Amit', 20, 'BCA', 85),
+(2, 'Sneha', 21, 'BBA', 72),
+(3, 'Rahul', 19, 'BCA', 90),
+(4, 'Priya', 22, 'BCom', 65);
+
+-- Display All Records
+SELECT * FROM Student;
+
+-- Update Record
+UPDATE Student
+SET Marks = 80
+WHERE RollNo = 2;
+
+-- Display After Update
+SELECT * FROM Student;
+
+-- Delete Record
+DELETE FROM Student
+WHERE RollNo = 4;
+
+-- Display After Delete
+SELECT * FROM Student;
+
+-- Arithmetic Operator
+SELECT Name, Marks, Marks + 5 AS GraceMarks
+FROM Student;
+
+-- Logical Operator
+SELECT * FROM Student
+WHERE Marks > 75 AND Course = 'BCA';
+
+-- Set Operator (UNION)
+SELECT Name FROM Student
+WHERE Course = 'BCA'
+
+UNION
+
+SELECT Name FROM Student
+WHERE Marks > 80;
+
+-- Pattern Matching using LIKE
+SELECT * FROM Student
+WHERE Name LIKE 'R%';
+
+-- String Function - UPPER
+SELECT UPPER(Name) AS StudentName
+FROM Student;
+
+-- String Function - LENGTH
+SELECT Name, LENGTH(Name) AS NameLength
+FROM Student;
+
+-- Final Output
+SELECT * FROM Student;
